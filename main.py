@@ -1,3 +1,5 @@
+from hand_tracker.hand_tracker import HandTracker
 
 if __name__ == "__main__":
-    pass
+    hand = HandTracker()
+    hand.track_hands()
