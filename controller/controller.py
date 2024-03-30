@@ -14,11 +14,16 @@ it.start()
 # Define the pin mode
 led_pin = board.get_pin('d:13:o')  # Digital pin 13, output mode
 
-# Blink the LED
-while True:
-    print("LED turned ON")
-    led_pin.write(1)  # Turn the LED on
-    time.sleep(1)  # Wait for 1 second
-    print("LED turned OFF")
-    led_pin.write(0)  # Turn the LED off
-    time.sleep(1)  # Wait for 1 second
+def total(total):
+    if total == 5:
+        led_pin.write(1)
+    else:
+        led_pin.write(0)
+# # Blink the LED
+# while True:
+#     print("LED turned ON")
+#     led_pin.write(1)  # Turn the LED on
+#     time.sleep(0.5)  # Wait for 1 second
+#     print("LED turned OFF")
+#     led_pin.write(0)  # Turn the LED off
+#     time.sleep(0.5)  # Wait for 1 second
