@@ -2,7 +2,7 @@ from pyfirmata import Arduino, util
 
 class ArduinoConfig:
     def __init__(self):
-        self.board = Arduino('COM4')
+        self.board = Arduino('COM4', baudrate=9600)
         self.iterator = util.Iterator(self.board)
         self.iterator.start()
 
