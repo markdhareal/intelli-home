@@ -1,6 +1,6 @@
 import cv2
 import mediapipe as mp
-import time
+from controller.arduino_controller import control
 
 class HandTracker:
 
@@ -23,6 +23,7 @@ class HandTracker:
                     count_fingers.append(0)
 
             total_fingers = count_fingers.count(1)
+            control(total_fingers)
             print(total_fingers)
 
     def track_hands(self):
