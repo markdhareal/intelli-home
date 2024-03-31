@@ -1,22 +1,27 @@
 import cv2
 import mediapipe as mp
+import threading
+
+from PIL import Image, ImageTk
 from controller.arduino_controller import control
 
 class HandTracker:
-
-    def __init__(self):
+    def __init__(self, panel):
+        self.panel = panel
         self.mp_draw = mp.solutions.drawing_utils
         self.mp_hand = mp.solutions.hands
+        self.cap = cv2.VideoCapture(0)
+        self.thread = threading.Thread(target=self.track_hands)
 
-    def finger_counter(self,list_for_land_mark):
-        tip_ids = [4,8,12,16,20]
+    def finger_counter(self, list_for_land_mark):
+        tip_ids = [4, 8, 12, 16, 20]
         count_fingers = []
         if len(list_for_land_mark) != 0:
             if list_for_land_mark[tip_ids[0]][1] > list_for_land_mark[tip_ids[0]-1][1]:
                 count_fingers.append(1)
             else:
                 count_fingers.append(0)
-            for id in range(1,5):
+            for id in range(1, 5):
                 if list_for_land_mark[tip_ids[id]][2] < list_for_land_mark[tip_ids[id]-2][2]:
                     count_fingers.append(1)
                 else:
@@ -27,13 +32,9 @@ class HandTracker:
             print(total_fingers)
 
     def track_hands(self):
-
-         cap = cv2.VideoCapture(0)
-
-         with self.mp_hand.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.5) as hands:
-
+        with self.mp_hand.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5) as hands:
             while True:
-                ret, image = cap.read()
+                ret, image = self.cap.read()
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 image.flags.writeable = False
                 results = hands.process(image)
@@ -47,19 +48,23 @@ class HandTracker:
                         for self.id, land_mark in enumerate(my_hands.landmark):
                             h, w, c = image.shape
                             coordinate_x, coordinate_y = int(land_mark.x * w), int(land_mark.y * h)
-                            land_mark_list.append([id, coordinate_x, coordinate_y])
+                            land_mark_list.append([self.id, coordinate_x, coordinate_y])
                         self.mp_draw.draw_landmarks(image, hand_landmark, self.mp_hand.HAND_CONNECTIONS)
 
-                
                 self.finger_counter(land_mark_list)
 
-                cv2.imshow("Frame", image)
-                k = cv2.waitKey(1)
+                image = cv2.resize(image, (600, 400))
+                image = ImageTk.PhotoImage(Image.fromarray(image))
+                self.panel.configure(image=image)
+                self.panel.image = image
 
+                k = cv2.waitKey(1)
                 if k == ord('q'):
                     break
-        
-         cap.release()
-         cv2.destroyAllWindows()
 
-    
+    def start(self):
+        self.thread.start()
+
+if __name__ == "__main__":
+    hand_tracker = HandTracker()
+    hand_tracker.start()
