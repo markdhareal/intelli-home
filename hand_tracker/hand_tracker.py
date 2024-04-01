@@ -37,29 +37,32 @@ class HandTracker:
 
             while True:
                 ret, image = self.cap.read()
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                image.flags.writeable = False
-                results = hands.process(image)
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                # image.flags.writeable = False
+                # results = hands.process(image)
+                # image.flags.writeable = True
+                # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 land_mark_list = []
-                if results.multi_hand_landmarks:
-                    for hand_landmark in results.multi_hand_landmarks:
-                        my_hands = results.multi_hand_landmarks[0]
-                        for self.id, land_mark in enumerate(my_hands.landmark):
-                            h, w, c = image.shape
-                            coordinate_x, coordinate_y = int(land_mark.x * w), int(land_mark.y * h)
-                            land_mark_list.append([id, coordinate_x, coordinate_y])
-                        self.mp_draw.draw_landmarks(image, hand_landmark, self.mp_hand.HAND_CONNECTIONS)
 
+                if ret:
+                    results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                    if results.multi_hand_landmarks:
+                        for hand_landmark in results.multi_hand_landmarks:
+                            my_hands = results.multi_hand_landmarks[0]
+                            for self.id, land_mark in enumerate(my_hands.landmark):
+                                h, w, c = image.shape
+                                coordinate_x, coordinate_y = int(land_mark.x * w), int(land_mark.y * h)
+                                land_mark_list.append([id, coordinate_x, coordinate_y])
+                            self.mp_draw.draw_landmarks(image, hand_landmark, self.mp_hand.HAND_CONNECTIONS)
                 
                 self.finger_counter(land_mark_list)
 
-                image = cv2.resize(image, (800, 600))
-                image = ImageTk.PhotoImage(Image.fromarray(image))
-                self.panel.configure(image=image)
-                self.panel.image = image
+                if ret:
+                    image = cv2.resize(image, (600, 400))
+                    image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB)))
+                    self.panel.configure(image=image)
+                    self.panel.image = image
 
                 k = cv2.waitKey(1)
 
