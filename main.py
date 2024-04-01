@@ -13,6 +13,9 @@ class App(tk.Tk):
         self.hand_tracker = HandTracker(self.panel)
         self.hand_tracker.start()
 
+    def start_app(self):
+        self.mainloop()
+
 if __name__ == "__main__":
     app = App()
-    app.mainloop()
+    app.start_app()
