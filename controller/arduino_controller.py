@@ -1,13 +1,13 @@
 from pyfirmata import Arduino, util
 
-port = 'COM4'
+port = 'COM8'
 board = Arduino(port, baudrate=9600)
 iterator = util.Iterator(board)
 iterator.start()
 
-led_pin = board.get_pin('d:13:o')
-relay_pin = board.get_pin('d:4:o')
-electric_fan = board.get_pin('d:7:o')
+led_pin = board.get_pin('d:4:o')
+relay_pin = board.get_pin('d:7:o')
+electric_fan = board.get_pin('d:8:o')
 
 # Initialize pin states
 led_state = 0

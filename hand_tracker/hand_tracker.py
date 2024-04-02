@@ -59,7 +59,7 @@ class HandTracker:
                 self.finger_counter(land_mark_list)
 
                 if ret:
-                    image = cv2.resize(image, (600, 400))
+                    image = cv2.resize(image, (400, 350))
                     image = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB)))
                     self.panel.configure(image=image)
                     self.panel.image = image
