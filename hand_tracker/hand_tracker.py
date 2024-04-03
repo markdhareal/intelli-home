@@ -13,6 +13,7 @@ class HandTracker:
         self.cap = cv2.VideoCapture(0)
         self.thread = threading.Thread(target=self.track_hands)
 
+    # THIS FUNCTION WILL COUNT THE FINGERS IN HAND BASED ON LANDMARKS
     def finger_counter(self,list_for_land_mark):
         tip_ids = [4,8,12,16,20]
         count_fingers = []
@@ -31,6 +32,7 @@ class HandTracker:
             control(total_fingers)
             print(total_fingers)
 
+    # THIS FUNCTION WILL TRACK THE HAND
     def track_hands(self):
 
          with self.mp_hand.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.5) as hands:

@@ -15,6 +15,7 @@ class App(tk.Tk):
 
         self.create_frames()
 
+    # FUNCTION TO CREATE THE WIDGETS
     def create_frames(self):
         # top_frame = tk.Frame(self, bg="#333333")
         # bottom_frame = tk.Frame(self, bg="#333333")
